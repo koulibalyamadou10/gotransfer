@@ -1,0 +1,28 @@
+server {
+    listen 80;
+    server_name 51.222.15.63; # api.kambily.com;
+
+    # Limite la taille maximale de la requête à 1G
+    client_max_body_size 1G;
+
+    # Fichiers statiques
+    location /static/ {
+        alias /home/kambily_user/kambily/static/;
+    }
+
+    location /media/ {
+        alias /home/kambily_user/kambily/media/;
+        expires 30d;
+        access_log /var/log/nginx/media_access.log;
+        autoindex on;
+    }
+
+    # Proxy vers le socket Unix de Daphne ou Gunicorn
+    location / {
+        proxy_pass http://unix:/home/kambily_user/kambily/kambily.sock;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

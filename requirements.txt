@@ -1,0 +1,9 @@
+Django~=5.2
+djangorestframework
+django-cors-headers
+djangorestframework-simplejwt
+mysqlclient
+Pillow
+gunicorn
+python-decouple
+drf-yasg

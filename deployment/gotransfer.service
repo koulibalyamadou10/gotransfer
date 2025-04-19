@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn Server for Django Application
+After=network.target
+
+[Service]
+User=kambily_user
+Group=kambily_user
+WorkingDirectory=/home/kambily_user/kambily
+ExecStart=/home/kambily_user/kambily/.venv/bin/gunicorn --workers 3 --bind unix:/home/kambily_user/kambily/kambily.sock --access-logfile /var/log/gotransfer/access.log --error-logfile /var/log/gotransfer/error.log kambily.wsgi:application
+Restart=always
+Environment="DJANGO_SETTINGS_MODULE=kambily.settings"
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=multi-user.target
