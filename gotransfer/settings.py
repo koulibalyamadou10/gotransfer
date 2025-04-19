@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'fees',
     'destinations',
     'beneficiary',
+    'statement',
 ]
 
 MIDDLEWARE = [
