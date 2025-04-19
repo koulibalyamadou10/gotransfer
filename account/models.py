@@ -27,11 +27,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, blank=False, null=False, error_messages={
         'unique': 'Ce mail existe deja !'
     })
-    role = models.CharField(max_length=20, choices=[('customer', 'Client')], default="customer")
+    role = models.CharField(
+        max_length=20, 
+        choices=[
+            ('customer', 'Client'),
+            ('agent', 'Agent'),
+        ], 
+        default="customer"
+    )
     phone_number = models.CharField(max_length=13, blank=False, null=False)
     address = models.TextField(blank=False, null=False)
     bio = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    image = models.ImageField(upload_to='images/', default='image.png')
     user_uuid = models.UUIDField(default=uuid.uuid4)
 
     card = models.FileField(upload_to='cards/', blank=True, null=True)
@@ -41,16 +48,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     balance = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
     currency = models.CharField(max_length=191, default='CAD')
     commission = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    shOther = models.BooleanField(default=False)
-    shBilling = models.BooleanField(default=False)
-    shCarrier = models.BooleanField(default=False)
 
     api_token = models.CharField(max_length=191, blank=True, null=True)
     remember_token = models.CharField(max_length=191, blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    email_verified_at = models.BooleanField(default=False)
+    email_verified_at = models.DateTimeField(null=True, blank=True)
+    email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
