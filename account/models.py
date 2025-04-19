@@ -32,6 +32,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         choices=[
             ('customer', 'Client'),
             ('agent', 'Agent'),
+            ('beneficiary', 'Bénéficiaire'),
         ], 
         default="customer"
     )
@@ -51,6 +52,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     api_token = models.CharField(max_length=191, blank=True, null=True)
     remember_token = models.CharField(max_length=191, blank=True, null=True)
+
+    #beneficiaries = models.ManyToManyField('self')
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
