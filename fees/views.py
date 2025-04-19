@@ -9,6 +9,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from fees import models
 from fees.models import Fees
 from fees.serializers import FeesSerializer
+from decimal import Decimal
 
 
 # Create your views here.
@@ -41,7 +42,13 @@ class FeesViewSet(viewsets.ModelViewSet):
             }
         )
     )
-    @action(detail=False, methods=['POST'], url_name='obtain_fees', permission_classes=[IsAuthenticated], authentication_classes=[JWTAuthentication])
+    @action(
+        detail=False, 
+        methods=['POST'], 
+        url_name='obtain_fees', 
+        permission_classes=[IsAuthenticated], 
+        authentication_classes=[JWTAuthentication]
+    )
     def obtain_fee(self, request):
         src_country = request.data.get('src_country')
         dest_country = request.data.get('dest_country')
@@ -54,7 +61,7 @@ class FeesViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            amount = float(amount)
+            amount = Decimal(amount)
         except ValueError:
             return Response({'message': 'amount doit être un nombre'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -62,8 +69,8 @@ class FeesViewSet(viewsets.ModelViewSet):
             fees = Fees.objects.filter(
                 src_country=src_country,
                 dst_country=dest_country,
-                from__lte=amount,
-                to__gte=amount
+                from_amount__lte=amount,
+                to_amount__gte=amount
             ).first()
 
             if not fees:
@@ -78,9 +85,9 @@ class FeesViewSet(viewsets.ModelViewSet):
                 'fixed_fee': fixed_fee,
                 'percentage_fee': round(percentage_fee, 2),
                 'total_fee': total_fee,
-                'currency': 'CAD',
-                'from': fees.from_,
-                'to': fees.to_
+                'currency': request.user.currency,
+                'from': fees.from_amount,
+                'to': fees.to_amount,
             }, status=status.HTTP_200_OK)
 
         except Exception as e:

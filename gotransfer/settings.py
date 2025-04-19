@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import Config, RepositoryEnv
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -72,6 +73,12 @@ SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {},  # Retire toute définition de sécurité
     'USE_SESSION_AUTH': False,   # Désactive l'authentification par session
     'SECURITY': [],              # Aucune sécurité requise
+}
+
+# JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 TEMPLATES = [
@@ -148,8 +155,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
-MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

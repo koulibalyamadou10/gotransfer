@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from account.models import CustomUser
 from account.serializers import CustomUserCreateSerializer, CustomUserSerializer
@@ -30,9 +31,18 @@ class CustomUserCreateViewSet(viewsets.ModelViewSet):
     serializer_class = CustomUserCreateSerializer
     queryset = CustomUser.objects.all().order_by('-id')
     permission_classes = [IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
+    lookup_field = 'user_uuid'
+    lookup_url_kwarg = 'user_uuid'
 
-    def create(self, request, *args, **kwargs):
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path='register',
+        permission_classes=[AllowAny],
+        authentication_classes=[],
+    )
+    def register(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -40,7 +50,14 @@ class CustomUserCreateViewSet(viewsets.ModelViewSet):
         user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=False, methods=['post'], url_path='login')
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path='login',
+        permission_classes=[AllowAny],
+        authentication_classes=[],
+    )    
+
     def login(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -51,10 +68,10 @@ class CustomUserCreateViewSet(viewsets.ModelViewSet):
         try:
             user = CustomUser.objects.get(email=email)
         except CustomUser.DoesNotExist:
-            return Response({"detail": "Identifiant incorrect."}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"detail": "Identifiant incorrect."}, status=status.HTTP_404_NOT_FOUND)
 
         if not user.check_password(password):
-            return Response({"detail": "Identifiant incorrect."}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"detail": "Identifiant incorrect."}, status=status.HTTP_404_NOT_FOUND)
 
         # Génération du token JWT
         refresh = RefreshToken.for_user(user)
@@ -65,18 +82,25 @@ class CustomUserCreateViewSet(viewsets.ModelViewSet):
             'access': str(refresh.access_token),
         }, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['delete'], url_path='logout')
+    @action(
+        detail=False, 
+        methods=['delete'], 
+        url_path='logout',
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication],
+    )
     def logout(self, request, *args, **kwargs):
         return Response({"message": "Déconnexion réussie"}, status=status.HTTP_200_OK)
 
-    @action(detail=False, methods=['get'], url_path='get_user')
+    @action(
+        detail=False, 
+        methods=['get'], 
+        url_path='get_user',
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication], 
+    )
     def get_user(self, request, *args, **kwargs):
         return Response(CustomUserSerializer(
             request.user,
             context={'request':request}
         ).data, status=status.HTTP_200_OK)
-
-    def get_permissions(self):
-        if self.action in ['create', 'login']:
-            return [AllowAny()]
-        return super().get_permissions()
