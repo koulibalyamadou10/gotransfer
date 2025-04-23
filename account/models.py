@@ -31,8 +31,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         max_length=20, 
         choices=[
             ('customer', 'Client'),
+            ('admin', 'Administrateur'),
             ('agent', 'Agent'),
-            ('beneficiary', 'Bénéficiaire'),
         ], 
         default="customer"
     )
@@ -42,8 +42,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     image = models.ImageField(upload_to='images/', default='image.png')
     user_uuid = models.UUIDField(default=uuid.uuid4)
 
-    card = models.FileField(upload_to='cards/', blank=True, null=True)
-    card_exp_date = models.DateTimeField(blank=True, null=True)
+    id_card = models.FileField(upload_to='cards/', blank=True, null=True)
+    id_card_exp_date = models.DateTimeField(blank=True, null=True)
 
     sponsor_email = models.EmailField(max_length=191, blank=True, null=True)
     balance = models.DecimalField(max_digits=18, decimal_places=2, default=0.00)
@@ -53,9 +53,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     api_token = models.CharField(max_length=191, blank=True, null=True)
     remember_token = models.CharField(max_length=191, blank=True, null=True)
 
-    #beneficiaries = models.ManyToManyField('self')
+    shOTher = models.BooleanField(default=False)
+    shBilling = models.BooleanField(default=False)
+    shCarrier = models.BooleanField(default=False)
+
+    commission = models.DecimalField(max_digits=5, decimal_places=2)
 
     is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     email_verified_at = models.DateTimeField(null=True, blank=True)
     email_verified = models.BooleanField(default=False)
@@ -66,6 +71,26 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def save(self, force_insert = ..., force_update = ..., using = ..., update_fields = ...):
+        self.set_sh()
+        return super().save(force_insert, force_update, using, update_fields)           
+
+    def set_sh(self):
+        if self.role == 'admin':
+            self.is_staff = True
+            self.shOTher = True
+            self.shCarrier = True
+            self.shBilling = True
+        elif self.role == 'agent':
+            self.shOTher = False
+            self.shCarrier = False
+            self.shBilling = True
+        elif self.role == 'customer':
+            self.shOTher = False
+            self.shCarrier = False
+            self.shBilling = False
+        self.save()
 
     def _str_(self):
         return f"{self.first_name} {self.last_name} {self.email} {self.role}"

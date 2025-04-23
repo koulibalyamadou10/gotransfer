@@ -4,6 +4,7 @@ import uuid
 # Create your models here.
 class Statement(models.Model):
     user = models.ForeignKey('account.CustomUser', on_delete=models.CASCADE, related_name='statements')
+    beneficiary = models.ForeignKey('beneficiary.Beneficiary', on_delete=models.CASCADE, related_name='beneficiary_statements')
     credit = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     debit = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2)

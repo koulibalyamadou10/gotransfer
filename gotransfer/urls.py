@@ -47,5 +47,8 @@ urlpatterns = [
     path('', include('account.urls')),
     path('', include('fees.urls')),
     path('', include('beneficiary.urls')),
+    path('', include('destinations.urls')),
+    path('', include('topup.urls')),
+    path('', include('destinations.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'destinations',
     'beneficiary',
     'statement',
+    'remittance',
+    'topup',
 ]
 
 MIDDLEWARE = [
