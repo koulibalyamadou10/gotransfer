@@ -10,7 +10,7 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
         fields = ('first_name', 'last_name', 'email', 'phone_number', 
                 'address', 'role', 'email_verified_at', 'email_verified',
-                'card', 'card_exp_date', 'bio', 'image', 'user_uuid', 'beneficiaries',
+                'id_card', 'id_card_exp_date', 'bio', 'image', 'user_uuid', 'beneficiaries',
                 'password', 'balance', 'currency', 'commission', 'sponsor_email')
         
     def validate_sponsor_email(self, value):
