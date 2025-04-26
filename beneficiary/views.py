@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Beneficiary  
 from .serializers import BeneficiaryCreateSerializer  
+from .serializers import BeneficiarySerializer  
 
 # Create your views here.
 class BeneficiaryViewSet(viewsets.ModelViewSet):
@@ -44,3 +45,26 @@ class BeneficiaryViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path='get_country_code',
+        permission_classes=[IsAuthenticated],
+        authentication_classes=[JWTAuthentication],
+    )   
+    def get_country_code(self, request, *args, **kwargs):
+        """
+        Récupérer le code du pays à partir du numéro de téléphone.
+        """
+        phone_number = request.data.get('phone_number')
+        if not phone_number:
+            return Response({"error": "Le numéro de téléphone est requis."}, status=status.HTTP_400_BAD_REQUEST)
+
+        beneficiary = self.get_queryset().filter(phone_number=phone_number).first()
+        if not Beneficiary:
+            return Response(
+                {"detail": "Aucun bénéficiaire trouvé avec ce numéro de téléphone."}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+        return Response(BeneficiarySerializer(beneficiary, context={'request': request}).data, status=status.HTTP_200_OK)

@@ -50,5 +50,7 @@ urlpatterns = [
     path('', include('destinations.urls')),
     path('', include('topup.urls')),
     path('', include('destinations.urls')),
+    path('', include('xrate.urls')),
+    path('', include('remittance.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

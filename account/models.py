@@ -37,6 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default="customer"
     )
     phone_number = models.CharField(max_length=13, blank=False, null=False)
+    country = models.CharField(max_length=50, blank=False, null=False) 
     address = models.TextField(blank=False, null=False)
     bio = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', default='image.png')
