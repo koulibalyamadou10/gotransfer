@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for gotransfer project.
 
@@ -31,7 +32,7 @@ SECRET_KEY = 'django-insecure-=bq0ml)dj+o!iu2gc6bx#*y!map@0grzwd$z)h(zry_v9=ro_u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.100.2', '127.0.0.1']
 
 
 # Application definition
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'statement',
     'remittance',
     'topup',
+    'xrate',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +83,7 @@ SWAGGER_SETTINGS = {
 
 # JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 

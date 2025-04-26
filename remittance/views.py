@@ -5,9 +5,15 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.response import Response
 
 from .serializers import RemittanceCreateSerializer
 from .models import Remittance
+
+# Utility function to generate a transaction ID
+def generate_transaction_id():
+    import uuid
+    return str(uuid.uuid4())
 
 
 # Create your views here.
@@ -33,3 +39,14 @@ class RemittanceViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     lookup_field = 'remittance_uuid'
     lookup_url_kwarg = 'remittance_uuid'
+
+    def create(self, request, *args, **kwargs):
+        """
+        Créer une nouvelle transaction.
+        """
+        request.data['customer'] = request.user.id
+        request.data['transaction_id'] = generate_transaction_id()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, 201)

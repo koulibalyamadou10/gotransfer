@@ -46,6 +46,7 @@ class CustomUserCreateViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         user.set_password(serializer.validated_data['password'])
+        user.set_sh()
         user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

@@ -37,6 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default="customer"
     )
     phone_number = models.CharField(max_length=13, blank=False, null=False)
+    country = models.CharField(max_length=50, blank=False, null=False) 
     address = models.TextField(blank=False, null=False)
     bio = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', default='image.png')
@@ -70,11 +71,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
-    def save(self, force_insert = ..., force_update = ..., using = ..., update_fields = ...):
-        self.set_sh()
-        return super().save(force_insert, force_update, using, update_fields)           
+    REQUIRED_FIELDS = []        
 
     def set_sh(self):
         if self.role == 'admin':
@@ -90,7 +87,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             self.shOTher = False
             self.shCarrier = False
             self.shBilling = False
-        self.save()
 
     def _str_(self):
         return f"{self.first_name} {self.last_name} {self.email} {self.role}"
