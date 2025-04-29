@@ -77,10 +77,18 @@ class CustomUserCreateViewSet(viewsets.ModelViewSet):
         refresh = RefreshToken.for_user(user)
 
         return Response({
-            'user': CustomUserCreateSerializer(user).data,
+            'user': CustomUserCreateSerializer(user, context={'request':request}).data,
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }, status=status.HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
     @action(
         detail=False, 

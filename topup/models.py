@@ -15,11 +15,16 @@ class Topup(models.Model):
     selling_currency = models.CharField(max_length=255)
     profit = models.DecimalField(max_digits=10, decimal_places=2)
     agent_profit = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, choices=[
+        ('requested', 'REQUESTED'),
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ], default='requested')
     sender_first_name = models.CharField(max_length=255)
     sender_last_name = models.CharField(max_length=255)
     sender_telephone = models.CharField(max_length=255)
-    agent_username = models.CharField(max_length=255)
+    agent_username = models.CharField(max_length=255, default='', null=True, blank=True)
     topup_uuid = models.CharField(max_length=255, unique=True, default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
