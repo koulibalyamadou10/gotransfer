@@ -68,3 +68,8 @@ class BeneficiaryViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
         return Response(BeneficiarySerializer(beneficiary, context={'request': request}).data, status=status.HTTP_200_OK)
+
+
+
+
+

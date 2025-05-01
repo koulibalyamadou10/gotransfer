@@ -37,7 +37,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default="customer"
     )
     phone_number = models.CharField(max_length=13, blank=False, null=False)
-    country = models.CharField(max_length=50, blank=False, null=False) 
+    country = models.CharField(max_length=50, blank=False, null=False, error_messages={
+        'unique': 'Ce pays existe deja !',
+        'blank': 'Le pays ne peut pas être vide !',
+        'null': 'Le pays ne peut pas être vide !',
+        'required': 'Le numero de téléphone est requis !',
+    }) 
     address = models.TextField(blank=False, null=False)
     bio = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', default='image.png')

@@ -49,11 +49,14 @@ class XRateViewSet(viewsets.ModelViewSet):
         src_country = request.data.get('src_country')
         dst_country = request.data.get('dst_country')
         amount = request.data.get('amount')
-        if not src_currency or not dst_currency or not amount or not src_country or not dst_country:
-            return Response(
-                {'detail': 'src_currency, dst_currency, src_country, dst_country et amount sont requis'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+
+        print(f'{phone_number} {src_currency} {dst_currency} {src_country} {dst_country} {amount}')
+
+        # if not src_currency or not dst_currency or not amount or not src_country or not dst_country:
+        #     return Response(
+        #         {'detail': 'src_currency, dst_currency, src_country, dst_country et amount sont requis'},
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
         
         try:
             amount = Decimal(amount)

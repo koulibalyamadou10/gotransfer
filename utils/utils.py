@@ -14,6 +14,5 @@ import random
 import time
 
 def generate_transaction_id():
-    timestamp = int(time.time())  # nombre de secondes depuis 1970
-    random_number = random.randint(1000, 9999)  # 4 chiffres aléatoires
-    return f"{timestamp}{random_number}"
+    timestamp = int(time.time() * 1000)
+    return f"{timestamp}"
