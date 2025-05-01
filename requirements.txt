@@ -7,3 +7,4 @@ Pillow
 gunicorn
 python-decouple
 drf-yasg
+requests
