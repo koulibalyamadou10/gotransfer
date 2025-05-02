@@ -6,8 +6,7 @@ class Beneficiary(models.Model):
     customer = models.ForeignKey('account.CustomUser', on_delete=models.CASCADE, related_name='beneficiaries')
     first_name = models.CharField(max_length=50, blank=False, null=False)
     last_name = models.CharField(max_length=50, blank=False, null=False)
-    phone_number = models.CharField(max_length=13, blank=False, null=False, unique=True, error_messages={
-        'unique': "Ce numéro de téléphone est déjà utilisé.",
+    phone_number = models.CharField(max_length=13, blank=False, null=False, error_messages={
         'blank': "Ce champ ne peut pas être vide.",
         'null': "Ce champ ne peut pas être nul."
     })

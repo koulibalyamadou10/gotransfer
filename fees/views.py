@@ -65,6 +65,7 @@ class FeesViewSet(viewsets.ModelViewSet):
         except ValueError:
             return Response({'message': 'amount doit être un nombre'}, status=status.HTTP_400_BAD_REQUEST)
 
+        print(f'{src_country} {dest_country} {amount}')
         try:
             fees = Fees.objects.filter(
                 src_country=src_country,

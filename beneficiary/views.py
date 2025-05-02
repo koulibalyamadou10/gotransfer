@@ -43,6 +43,16 @@ class BeneficiaryViewSet(viewsets.ModelViewSet):
         request.data['customer'] = request.user.id
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        # Vérifier si le bénéficiaire existe déjà
+        existing_beneficiary = self.get_queryset().filter(
+            phone_number=serializer.validated_data['phone_number'],
+            customer=request.user
+        ).first()
+        if existing_beneficiary:
+            return Response(
+                {"detail": "Un bénéficiaire avec ce numéro de téléphone existe déjà."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
