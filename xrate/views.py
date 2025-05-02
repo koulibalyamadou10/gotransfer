@@ -63,7 +63,7 @@ class XRateViewSet(viewsets.ModelViewSet):
         except ValueError:
             return Response({'detail': 'amount doit être un nombre'}, status=status.HTTP_400_BAD_REQUEST)
 
-        beneficiary = Beneficiary.objects.get(phone_number=phone_number)
+        beneficiary = Beneficiary.objects.get(phone_number=phone_number, customer=request.user)
         if not beneficiary:
             return Response(
                 {"detail": "Aucun bénéficiaire trouvé avec ce numéro de téléphone."}, 

@@ -91,6 +91,7 @@ class TopupViewSet(viewsets.ModelViewSet):
         authentication_classes=[JWTAuthentication],
     )
     def list_products(self, request, *args, **kwargs):
+        print(request.data)
         # Verifier si le numero de telephone du user connecte commence par + si non remettre le +
         phone_number = request.data.get('phone_number')
         if not phone_number:
