@@ -84,7 +84,7 @@ class TopupViewSet(viewsets.ModelViewSet):
     # Endpoint pour lister les produits disponibles pour un operateur
     @action(
         detail=False, 
-        methods=['get'],
+        methods=['post'],
         url_path='products',
         url_name='products',
         permission_classes=[IsAuthenticated],
