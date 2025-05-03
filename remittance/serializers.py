@@ -5,3 +5,8 @@ class RemittanceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Remittance
         fields = '__all__'
+
+class RemittanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Remittance
+        fields = '__all__'

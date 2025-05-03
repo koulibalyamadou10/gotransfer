@@ -98,6 +98,7 @@ class XRateViewSet(viewsets.ModelViewSet):
                 'percentage_fee': round(percentage_fee, 2),
                 'total_fee': total_fee,
                 'total_amount': round(amount + total_fee, 2),
+                'amount': amount,
                 'currency': request.user.currency,
                 'from': fees.from_amount,
                 'to': fees.to_amount,
