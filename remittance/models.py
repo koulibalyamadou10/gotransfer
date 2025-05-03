@@ -2,7 +2,7 @@ from django.db import models
 import uuid
 
 # Create your models here.
-class Remittance(models.Model):
+class  Remittance(models.Model):
     transaction_id = models.CharField(max_length=255)
     sender = models.ForeignKey('account.CustomUser', on_delete=models.CASCADE, related_name="remittances")
     role = models.ForeignKey('beneficiary.Beneficiary', related_name="remittance_beneficiaries", on_delete=models.CASCADE)
